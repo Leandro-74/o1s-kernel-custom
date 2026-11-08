@@ -194,6 +194,8 @@ idle, exatamente o problema que o Floppy relatou e resolveu baixando para 1%.
 
 ### Fase 1 — Baixo risco, ganho rápido
 
+> Implementada e validada no aparelho. Ver `docs/validacao-floppy-fase1.md`.
+
 Tudo config/flag ou patch pequeno e já testado como aplicável.
 
 | # | Mudança | Arquivo | Validação |
