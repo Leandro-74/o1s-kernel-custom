@@ -87,6 +87,33 @@ adb shell '/data/adb/ksud --version'
 Depois do install, o kernel executa `ksud post-fs-data`, `services` e
 `boot-completed` via `init.rc` injetado, sem precisar do `ksuinit` no ramdisk.
 
-`su` pelo `adb shell` não funciona por padrão: o BakaSU só libera o UID `shell`
-(2000) quando `CONFIG_KSU_DEBUG` está ligado. Para conceder root a um app, use a aba
-SuperUsuário do manager.
+Para conceder root a um app, use a aba SuperUsuário do manager.
+
+## `su` no `adb shell`
+
+O UID `shell` (2000) não é liberado por padrão: em `kernel/core/init.c`,
+`allow_shell` só é `true` quando `CONFIG_KSU_DEBUG` está ligado. Isso é proposital,
+não é falha de integração.
+
+Não é preciso recompilar o kernel para liberar. O `shell` aparece na lista de apps
+do manager como `Shell`/`com.android.shell` e pode ser autorizado como qualquer
+outro app:
+
+1. Aba SuperUsuário, busque por `shell`.
+2. Toque em `Shell` (`com.android.shell`).
+3. Escolha `Personalizado` e ligue `SuperUsuário`.
+
+A autorização fica em `/data/adb/ksu/.allowlist` e sobrevive a reboots:
+
+```sh
+adb unroot
+adb shell id            # uid=2000(shell)
+adb shell 'su -c id'    # uid=0(root) ... context=u:r:ksu:s0
+```
+
+O dmesg confirma o caminho do hook: `do_execveat_common su found` seguido de
+`do_ksu_handle_execveat_sucompat su->sh!`.
+
+Alternativa via kernel: trocar o padrão de `allow_shell` para `true` exige rebuild e
+reflash, e libera root para qualquer `adb shell` sem confirmação. Só use se esse for
+o comportamento desejado; `CONFIG_KSU_DEBUG` não é recomendado por ligar o modo debug.
