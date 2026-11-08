@@ -123,6 +123,7 @@ config GENERIC_TRACER
 
 if TRACING
 
+# From the patch by Park Ju Hyung, Alex Naidis and prabhatkrmishra.
 config DISABLE_TRACE_PRINTK
 	bool "Force disable trace_printk() usage"
 	default y

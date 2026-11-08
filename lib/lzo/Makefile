@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-only
+# -O3 -funroll-loops from FloppyKernel (Flopster101)
 ccflags-y += -O3 -funroll-loops
 
 lzo_compress-objs := lzo1x_compress.o

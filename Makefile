@@ -757,6 +757,8 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os
 endif
 
+# CPU tuning for the Exynos 2100, from FloppyKernel
+# (Floppy1280, Flopster101).
 ifdef CONFIG_CC_IS_CLANG
 ifeq ($(CONFIG_ARCH_EXYNOS), y)
 KBUILD_CFLAGS += -mcpu=cortex-a55 -mtune=cortex-a78
@@ -943,7 +945,7 @@ ifdef CONFIG_LTO_CLANG
 ifdef CONFIG_THINLTO
 CC_FLAGS_LTO_CLANG := -flto=thin $(call cc-option, -fsplit-lto-unit)
 
-# LLVM tunings
+# LLVM tunings from FloppyKernel (Floppy1280, Flopster101)
 LD_FLAGS_LTO_CLANG += -mllvm -import-hot-multiplier=2
 LD_FLAGS_LTO_CLANG += -mllvm -inline-threshold=300
 LD_FLAGS_LTO_CLANG += -mllvm -import-instr-limit=30
@@ -957,6 +959,7 @@ ifndef CONFIG_THINLTO
 LD_FLAGS_LTO_CLANG += -mllvm -import-instr-limit=5
 endif
 
+# Codegen aggressiveness from FloppyKernel (Flopster101)
 ifdef CONFIG_CC_IS_CLANG
 KBUILD_CFLAGS += -mllvm -unroll-threshold=600
 KBUILD_CFLAGS += -mllvm -regalloc-enable-advisor=release
