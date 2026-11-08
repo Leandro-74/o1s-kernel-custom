@@ -45,7 +45,7 @@ Fora deste repositório, no diretório pai:
 | Root | BakaSU `516d3e87`, driver `35257`, uapi 6 |
 | Build validado | `#3` (`boot-floppy-fase1.img`) |
 | Módulos da ROM | 271/271 |
-| Fase 1 | mesclada em `resukisu`; `floppy-tweaks` ainda existe por causa dos testes longos pendentes |
+| Fase 1 | mesclada em `resukisu`; branch `floppy-tweaks` removida (local e remota). Testes longos seguem na `resukisu` |
 
 Pendências conhecidas: drain em idle de 8 h, suspend/resume longo, teste real de
 tethering/TTL, pressão de memória para o kswapd e térmico sob carga para o
@@ -61,7 +61,9 @@ tethering/TTL, pressão de memória para o kswapd e térmico sob carga para o
    totalmente validada no aparelho, faça o merge na `resukisu` e apague a branch
    de teste (local e, após confirmação, remota). Se a validação ainda tiver
    pendências, a branch continua existindo e o status fica `parcial` na
-   documentação.
+   documentação. Testes de longa duração (drain, suspend, uso normal) podem
+   continuar na `resukisu` depois do merge; se surgir inconsistência, crie uma
+   branch de correção (ex.: `fix-<assunto>`) em vez de reabrir a branch antiga.
 3. **Commits por alteração.** Divida o trabalho em commits atômicos, um por
    mudança lógica. Use `git add -p` quando um arquivo tiver mais de uma mudança
    independente. Não junte mudanças não relacionadas.
@@ -151,7 +153,8 @@ tethering/TTL, pressão de memória para o kswapd e térmico sob carga para o
 7. **Peça validação** ao usuário quando precisar do aparelho. Avise que o Galaxy
    S21 precisa estar conectado antes de qualquer comando `adb`/flash.
 8. **Após validação total**: merge na `resukisu`, apague a branch de teste,
-   atualize o status na documentação e aguarde a confirmação para o push.
+   atualize o status na documentação e aguarde a confirmação para o push. Os
+   testes de longa duração seguem na `resukisu`; correções vão em branch própria.
 
 ## 7. Build (comandos de referência)
 
@@ -237,9 +240,9 @@ Antes de commitar:
 Branches:
 
 - `resukisu` é a branch padrão e o destino dos merges.
-- `floppy-tweaks` é a branch da Fase 1; foi mesclada, mas continua existindo
-  enquanto os testes longos não terminarem. Não a apague sem confirmar que as
-  pendências foram fechadas.
+- `floppy-tweaks` foi mesclada em `resukisu` e removida (local e remota). Os
+  testes de longa duração seguem na `resukisu`; se aparecer inconsistência, crie
+  uma branch de correção com nome descritivo.
 - Branches de teste novas seguem o nome da implementação. Após o merge
   validado, apague a branch local e, com confirmação, a remota.
 

@@ -21,9 +21,9 @@ mexer no assunto de novo.
 | Módulos da ROM | 271, todos carregando |
 
 A Fase 1 do plano do Floppy foi desenvolvida na branch `floppy-tweaks`
-(commits `690cbc40d`..`ca145cc42`) e mesclada em `resukisu`. A branch de teste
-continua existindo enquanto os testes longos (drain em idle, suspend) não forem
-concluídos; quando forem, ela deve ser apagada conforme o `AGENTS.md`.
+(commits `690cbc40d`..`ca145cc42`), mesclada em `resukisu` e a branch foi
+removida (local e remota). Os testes de longa duração seguem na `resukisu`; se
+surgir inconsistência, crie uma branch de correção com nome descritivo.
 
 ## Como ler
 

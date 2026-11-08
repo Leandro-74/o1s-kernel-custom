@@ -72,6 +72,10 @@ Nenhum panic, `BUG:` ou erro de CFI.
 - Uso normal por alguns dias (Wi-Fi, Bluetooth, câmera, chamadas, hotspot).
 - Comparação de boot time e benchmarks antes/depois.
 
+> A branch `floppy-tweaks` foi mesclada em `resukisu` e removida (local e
+> remota). Os testes acima continuam na `resukisu`; se algo falhar, crie uma
+> branch de correção com nome descritivo.
+
 ## Rollback
 
 O boot anterior (`#2`) está identificado pelo hash
