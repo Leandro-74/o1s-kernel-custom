@@ -309,3 +309,24 @@ Procedimento detalhado já existente: `docs/validacao-o1s-2026-11-08.md`,
 Começar pela **Fase 1**, em commits pequenos e independentes, medindo antes e
 depois. Se o ganho for perceptível e a estabilidade se mantiver, seguir para a
 Fase 2. As fases 3 e 4 só depois de a Fase 2 estar estável por vários dias.
+
+## 10. Créditos
+
+Esta análise e os patches portados não seriam possíveis sem o trabalho de:
+
+- **Flopster101** (Nahuel Gómez), mantenedor do
+  [FloppyKernel](https://github.com/FlopKernel-Series/flop_exynos2100_kernel),
+  autor da maior parte dos patches de scheduler, memória, térmico, undervolt
+  e configuração.
+- **Floppy1280**, pelas flags de otimização e pelo trabalho original de
+  undervolt do Exynos 2100.
+- **celtare21** e **Pranav Vashi**, pelo patch do alarmtimer.
+- **Park Ju Hyung**, **Alex Naidis** e **prabhatkrmishra**, pela opção
+  `CONFIG_DISABLE_TRACE_PRINTK`.
+- **Sultan Alsawaf**, pelo CASS.
+- **andip71**, pelo Boeffla wakelock blocker.
+- **Samsung**, **LineageOS** e **Mack**, pela base do kernel e da ROM.
+- **KernelSU**, **SukiSU Ultra**, **ReSukiSU** e **BakaSU**, pelo root.
+
+A lista completa, com o mapeamento de cada commit local para a origem, está em
+`docs/creditos.md`.

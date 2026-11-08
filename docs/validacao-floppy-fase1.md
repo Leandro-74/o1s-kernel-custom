@@ -74,3 +74,18 @@ Nenhum panic, `BUG:` ou erro de CFI.
 O boot anterior (`#2`) está identificado pelo hash
 `8a21cff3bc958d50400a390423eb2113a00bbc92f29ca73625bd530c7ca225dd`.
 O procedimento de gravação e volta está em `docs/boot-img-e-flash.md`.
+
+## Créditos
+
+Os patches desta fase vêm do
+[FloppyKernel](https://github.com/FlopKernel-Series/flop_exynos2100_kernel):
+
+- **Flopster101**: flags de compilação, `dbg_snapshot_task`, kswapd,
+  `energy_step`, configs de energia e de rede, correção do `decon_core.c`.
+- **Floppy1280**: ideia original das flags de otimização e do MLGO.
+- **celtare21** e **Pranav Vashi**: relaxamento do wakelock do alarmtimer.
+- **Park Ju Hyung**, **Alex Naidis** e **prabhatkrmishra**:
+  `CONFIG_DISABLE_TRACE_PRINTK`.
+
+O mapeamento completo, incluindo base, toolchain e root, está em
+`docs/creditos.md`.
