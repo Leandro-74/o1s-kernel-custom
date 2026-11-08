@@ -29,6 +29,11 @@ Build testado: `#2 SMP PREEMPT`, clang 21.0.0 (`r563880c`), LTO/CFI, release
   "Congratulations! Root access is properly installed on this device!".
 - Hook manual de `execve` confirmado no dmesg:
   `do_execveat_common su found` -> `do_ksu_handle_execveat_sucompat su->sh!`.
+- `su` no `adb shell` validado sem recompilar nada: `com.android.shell` (UID 2000)
+  autorizado pela aba SuperUsuário, com a entrada gravada em
+  `/data/adb/ksu/.allowlist`. Com `adb unroot`, `adb shell id` retorna
+  `uid=2000(shell)` e `adb shell 'su -c id'` retorna `uid=0(root)` com
+  `context=u:r:ksu:s0`, inclusive após reboot.
 
 ## Warnings
 
