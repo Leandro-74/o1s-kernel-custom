@@ -93,6 +93,12 @@ cobrem a base, as ferramentas e cada mudança portada do FloppyKernel.
 - **MQ-SSG**: Samsung Electronics.
 - **F2FS**: Samsung Electronics e demais autores upstream.
 
+## Documentação técnica
+
+Cada mudança de código ou configuração tem um documento próprio em
+`docs/alteracoes/`, com contexto, mecanismo, compatibilidade, validação e
+rollback. O índice está em `docs/alteracoes/README.md`.
+
 ## Licença
 
 Todo o código derivado mantém a licença original GPL-2.0 (ou GPL-2.0-only,

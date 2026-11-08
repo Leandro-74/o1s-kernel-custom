@@ -36,6 +36,9 @@ habilitados.
 - `energy_step`: removido o `policy->rwsem` do caminho quente e adicionado
   recheck limitado de scale-up.
 
+Os detalhes técnicos de cada item (mecanismo, compatibilidade, riscos e como
+evoluir) estão em `docs/alteracoes/`.
+
 ## Resultado no aparelho
 
 | Verificação | Resultado |
