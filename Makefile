@@ -957,6 +957,12 @@ ifndef CONFIG_THINLTO
 LD_FLAGS_LTO_CLANG += -mllvm -import-instr-limit=5
 endif
 
+ifdef CONFIG_CC_IS_CLANG
+KBUILD_CFLAGS += -mllvm -unroll-threshold=600
+KBUILD_CFLAGS += -mllvm -regalloc-enable-advisor=release
+LD_FLAGS_LTO_CLANG += -mllvm -regalloc-enable-advisor=release
+endif
+
 KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
 KBUILD_LDFLAGS_MODULE += $(LD_FLAGS_LTO_CLANG)
 
