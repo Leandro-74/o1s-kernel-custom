@@ -33,7 +33,8 @@ cobrem a base, as ferramentas e cada mudança portada do FloppyKernel.
   Floppy e autor da maior parte dos patches usados aqui.
 - **Floppy1280**: flags de otimização do compilador e configuração do MLGO,
   importadas pelo Floppy (`0c0af29ab`). O undervolt do Exynos 2100 também
-  deriva do kernel dele (`flop_s5e8825_kernel`).
+  deriva do kernel dele
+  ([flop_s5e8825_kernel](https://github.com/FlopKernel-Series/flop_s5e8825_kernel)).
 - **celtare21** `<celtare21@gmail.com>`: patch do alarmtimer (`53cab1dcb`),
   com sign-off de **Pranav Vashi** `<neobuddy89@gmail.com>`.
 - **Park Ju Hyung** `<qkrwngud825@gmail.com>`, **Alex Naidis**
@@ -77,6 +78,20 @@ cobrem a base, as ferramentas e cada mudança portada do FloppyKernel.
 - **ZRAM multi-comp**: Flopster101 e autores upstream do zram.
 - **kshrink**: Flopster101, a partir do reclaim assíncrono de Oplus/Xiaomi.
 - **Boeffla wakelock blocker**: andip71.
+
+## Componentes upstream utilizados
+
+- **BBR**: Neal Cardwell, Yuchung Cheng, Van Jacobson e Soheil Hassas Yeganeh
+  (Google).
+- **CAKE**: Toke Høiland-Jørgensen e demais autores do `sch_cake`.
+- **LZ4**: Yann Collet.
+- **Zstandard**: Meta/Facebook e Yann Collet.
+- **zram**: Nitin Gupta, Sergey Senozhatsky, Minchan Kim e demais autores.
+- **MGLRU**: Yu Zhao e demais autores upstream.
+- **Wakelocks e `PM_WAKELOCKS_GC`**: Android Open Source Project (Google).
+- **EMS**: Samsung Electronics.
+- **MQ-SSG**: Samsung Electronics.
+- **F2FS**: Samsung Electronics e demais autores upstream.
 
 ## Licença
 

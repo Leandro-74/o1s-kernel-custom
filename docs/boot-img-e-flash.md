@@ -117,3 +117,9 @@ O dmesg confirma o caminho do hook: `do_execveat_common su found` seguido de
 Alternativa via kernel: trocar o padrão de `allow_shell` para `true` exige rebuild e
 reflash, e libera root para qualquer `adb shell` sem confirmação. Só use se esse for
 o comportamento desejado; `CONFIG_KSU_DEBUG` não é recomendado por ligar o modo debug.
+
+## Créditos
+
+`mkbootimg`, `unpack_bootimg` e `avbtool` são ferramentas do AOSP. Base do
+kernel e da ROM: LineageOS, Mack e Samsung. Root: KernelSU, SukiSU Ultra,
+ReSukiSU e BakaSU. A lista completa está em `docs/creditos.md`.

@@ -71,3 +71,9 @@ idêntico ao `boot.img` do ZIP da ROM.
 - USB/MTP, carregamento rápido e OTG.
 - Suspender/retomar, deep sleep e térmicas.
 - Uso contínuo por 24 h.
+
+## Créditos
+
+Base do kernel e da ROM: LineageOS, Mack e Samsung. Root: KernelSU, SukiSU
+Ultra, ReSukiSU e BakaSU. Toolchain: AOSP Clang. A lista completa está em
+`docs/creditos.md`.

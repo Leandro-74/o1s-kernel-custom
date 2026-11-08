@@ -70,3 +70,9 @@ grep -c ' ksu_' out/System.map   # 355
 
 O release string precisa ser idêntico ao do stock. É ele que entra no vermagic e
 permite que os 271 módulos da ROM carreguem.
+
+## Créditos
+
+Base do kernel e da ROM: LineageOS, Mack e Samsung. Root: KernelSU, SukiSU
+Ultra, ReSukiSU e BakaSU. Toolchain: AOSP Clang. A lista completa está em
+`docs/creditos.md`.
