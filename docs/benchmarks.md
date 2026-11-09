@@ -70,10 +70,46 @@ coletânea de resultados é fornecida (regra 6 do `AGENTS.md`).
 
 ## Rodadas
 
-Nenhuma rodada registrada até o momento. A primeira será adicionada quando a
-suíte em execução for concluída e os resultados forem fornecidos.
+### 2026-11-09 — estado atual (undervolt ativo)
 
-Modelo de seção a ser usado:
+| Item | Valor |
+|---|---|
+| Build / kernel | LineageOS 23.2-20261031-UNOFFICIAL / `5.4.302-android12-5.4-exynos-ga273fe61262c` |
+| Governador | `energy_step` |
+| Memória | 7,03 GB |
+| 3DMark Wild Life | **6 728** (FPS médio 40,29) |
+| Geekbench 7 CPU | **1 257** single / **3 655** multi |
+| Geekbench 7 GPU OpenCL | **6 259** |
+| Geekbench 7 GPU Vulkan | **5 710** |
+| AnTuTu v12 | **1 303 233** |
+| Temperatura | 3DMark 26 °C → 29 °C; AnTuTu 31,8 °C → 38,3 °C; Geekbench `não informado` |
+| Carga | 3DMark 100% → 100%; AnTuTu −6% |
+| Duração | `não informado` |
+
+Detalhamento do AnTuTu:
+
+| Componente | Pontuação |
+|---|---|
+| CPU | 463 638 |
+| GPU | 210 270 |
+| Memória | 290 620 |
+| UX | 338 705 |
+
+Capturas completas em `benchmarks_screenshots/2026-11-09/`, no diretório pai do
+repositório.
+
+Observações:
+
+- O 3DMark informa que o resultado supera 98% dos Galaxy S21 (Exynos 2100)
+  registrados e 76% de todos os dispositivos.
+- O AnTuTu registra 4 núcleos a 2,21 GHz, 3 a 2,81 GHz e 1 a 2,91 GHz, com
+  `energy_step` como governador.
+- O Vulkan ficou 8,8% abaixo do OpenCL no Geekbench; ambos usam a Mali-G78 r0p1
+  (14 unidades de computação).
+- Os três apps rodaram no mesmo build e com o undervolt de 1% ativo. A ordem e
+  as condições estão descritas na metodologia acima.
+
+Modelo de seção para as próximas rodadas:
 
 ```md
 ### AAAA-MM-DD — <rótulo>
@@ -95,7 +131,7 @@ Observações e análise:
 
 | Data | 3DMark | Geekbench | AnTuTu | Build / kernel | Observações |
 |---|---|---|---|---|---|
-| — | — | — | — | — | primeira rodada pendente |
+| 2026-11-09 | 6 728 | CPU 1 257 / 3 655; GPU 6 259 CL / 5 710 VK | 1 303 233 | `5.4.302-android12-5.4-exynos-ga273fe61262c` | undervolt 1% ativo; primeira rodada |
 
 ## Monitoramento de consumo
 
