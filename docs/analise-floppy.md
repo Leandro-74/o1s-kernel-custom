@@ -219,7 +219,7 @@ sem panic/CFI/`BUG:`, mesma string de release.
 
 | # | Mudança | Esforço | Risco |
 |---|---|---|---|
-| 2.1 | ~~Undervolt runtime (`27200b8ad` + Kconfig)~~ — descartado; `CAL_IF=m` e a interface já existe em `/sys/kernel/percent_margin` | — | — |
+| 2.1 | Undervolt runtime — implementado em `undervolt_o1s.ko` sem portar `27200b8ad`; ver `docs/alteracoes/22-undervolt-modulo-kernel.md` | 3 commits | B |
 | 2.2 | Série de offsets térmicos (10 commits, porte manual) | 2–3 commits | M |
 | 2.3 | Boeffla wakelock blocker + hook em `wakeup.c` | 2 commits | M |
 | 2.4 | `SUSPEND_SKIP_SYNC` (avaliar integridade de dados) | 1 commit | M |

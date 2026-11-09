@@ -2,12 +2,16 @@
 
 | Campo | Valor |
 |---|---|
-| Status | validado (runtime e persistência no boot) |
+| Status | histórico — substituído pelo [documento 22](22-undervolt-modulo-kernel.md) |
 | Commit(s) | documentação apenas — o patch de kernel foi descartado |
 | Arquivos | `docs/alteracoes/21-undervolt-runtime.md`, `docs/analise-floppy.md` |
 | Origem | interface `percent_margin` do módulo `cmupmucal.ko` da ROM; análise do Floppy `27200b8ad` |
 | Risco | baixo com offsets conservadores; médio se o offset crescer |
 | Validação | `-1%` em CL0/CL1/CL2/G3D aplicado e reaplicado no boot; aparelho estável |
+
+> Este documento registra a investigação e a primeira persistência via script.
+> O uso atual é o módulo de kernel descrito em
+> [22 — Undervolt por módulo de kernel](22-undervolt-modulo-kernel.md).
 
 ## Contexto
 

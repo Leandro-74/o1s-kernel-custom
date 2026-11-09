@@ -25,6 +25,7 @@ arquivo **antes** de alterar código, config, build ou documentação.
 | `drivers/kernelsu` | Symlink para `../KernelSU/kernel` |
 | `docs/` | Build, flash, análises, validação e créditos |
 | `docs/alteracoes/` | Um documento por mudança |
+| `ksu-modules/` | Fontes dos módulos do KernelSU (scripts e painel WebUI) |
 | `out/` | Saída de build (ignorada pelo Git) |
 
 Fora deste repositório, no diretório pai:
@@ -46,6 +47,7 @@ Fora deste repositório, no diretório pai:
 | Build validado | `#3` (`boot-floppy-fase1.img`) |
 | Módulos da ROM | 271/271 |
 | Fase 1 | mesclada em `resukisu`; branch `floppy-tweaks` removida (local e remota). Testes longos seguem na `resukisu` |
+| Undervolt | módulo `undervolt_o1s.ko` + painel KernelSU; ver `docs/alteracoes/22-undervolt-modulo-kernel.md` |
 
 Pendências conhecidas: drain em idle de 8 h, suspend/resume longo, teste real de
 tethering/TTL, pressão de memória para o kswapd e térmico sob carga para o

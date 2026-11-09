@@ -65,8 +65,10 @@ cobrem a base, as ferramentas e cada mudança portada do FloppyKernel.
 
 ## Fases futuras — créditos já reservados
 
-- **Undervolt runtime**: Flopster101 (`27200b8ad`), a partir do trabalho de
-  Floppy1280.
+- **Undervolt runtime**: implementação autoral em `undervolt_o1s.ko`,
+  inspirada na abordagem de Flopster101 (`27200b8ad`) e no trabalho de
+  Floppy1280; nenhum código do patch foi portado (ver
+  `docs/alteracoes/22-undervolt-modulo-kernel.md`).
 - **Offsets térmicos por zona**: Flopster101 (`ba257f035` e correções).
 - **Hotplug do prime**: Flopster101 (`a7ae7e5f6`, `6fda90728`).
 - **CASS**: Sultan Alsawaf, integração com EMS por Flopster101
