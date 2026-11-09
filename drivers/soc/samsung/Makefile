@@ -115,3 +115,6 @@ obj-$(CONFIG_EXYNOS_IDLE_PROFILER)	+= exynos-idle-profiler.o
 
 # Exynos PM DVS
 obj-$(CONFIG_EXYNOS_PM_DVS)        += exynos-pm-dvs.o
+
+# Exynos runtime undervolt
+obj-$(CONFIG_SOC_EXYNOS2100_UV)    += undervolt/
