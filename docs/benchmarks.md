@@ -73,10 +73,6 @@ coletânea de resultados é fornecida (regra 6 do `AGENTS.md`).
 Nenhuma rodada registrada até o momento. A primeira será adicionada quando a
 suíte em execução for concluída e os resultados forem fornecidos.
 
-> Há no banco local do 3DMark uma execução isolada de Wild Life Extreme
-> (`overallScore` 1984) de 2026-11-08, sem ambiente documentado. Ela não entra
-> no histórico comparativo por não ter sido uma rodada controlada.
-
 Modelo de seção a ser usado:
 
 ```md
