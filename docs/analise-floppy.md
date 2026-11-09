@@ -138,16 +138,19 @@ devolver `-1` para fair quando o CASS estiver ativo.
 
 | Item | O que faz | Estado | Risco | Decisão |
 |---|---|---|---|---|
-| `SOC_EXYNOS2100_UNDERVOLT` + `27200b8ad` | Offset percentual por domínio (CL0/CL1/CL2/GPU) via `/sys/kernel/exynos_uv` | ausente; patch aplica limpo no `fvmap.c` | M | Fase 2 |
+| `SOC_EXYNOS2100_UNDERVOLT` + `27200b8ad` | Offset percentual por domínio (CL0/CL1/CL2/GPU) via `/sys/kernel/exynos_uv` | patch aplica, mas `CAL_IF=m` coloca o `fvmap.c` no `cmupmucal.ko` da ROM, fora do `Image` | M | **Descartado**; usar `/sys/kernel/percent_margin` |
 | Defaults de 1% por cluster | Valores que o Floppy considera estáveis | — | M | Fase 2, começando em 0% |
 | Offsets térmicos por zona (`ba257f035` + 9 correções) | Antecipa/atrasa trips de throttling por zona | ausente; série de ~420 linhas | M | Fase 2 |
 | `f8375d99b` anti-thrashing do hotplug ambiente | Evita liga/desliga térmico | ausente | M | Fase 2 |
 | `CPU_FREQ_GOV_ENERGYSTEP` | Governor do EMS | presente | — | — |
 
-O undervolt é o item de maior retorno por linha de código: ~380 linhas, patch
-aplicável sem conflito, exposto por sysfs e com default configurável. Ainda
-assim é o que mais exige teste: undervolt agressivo causa reboot aleatório em
-idle, exatamente o problema que o Floppy relatou e resolveu baixando para 1%.
+O undervolt é o item de maior retorno, mas o patch do Floppy não se aplica a esta
+árvore: como `CONFIG_CAL_IF=m`, o `fvmap.c` compila no `cmupmucal.ko`, que a ROM
+carrega de `vendor_dlkm`. A interface existente
+`/sys/kernel/percent_margin/<domínio>_margin_percent` já aceita offsets
+negativos; é por ela que o undervolt deve ser usado. Continua sendo o item que
+mais exige teste: undervolt agressivo causa reboot aleatório em idle,
+exatamente o problema que o Floppy relatou e resolveu baixando para 1%.
 
 ### 4.7 I/O e filesystem
 
@@ -216,7 +219,7 @@ sem panic/CFI/`BUG:`, mesma string de release.
 
 | # | Mudança | Esforço | Risco |
 |---|---|---|---|
-| 2.1 | Undervolt runtime (`27200b8ad` + Kconfig), default 0% e depois 1% | 1 commit | M |
+| 2.1 | ~~Undervolt runtime (`27200b8ad` + Kconfig)~~ — descartado; `CAL_IF=m` e a interface já existe em `/sys/kernel/percent_margin` | — | — |
 | 2.2 | Série de offsets térmicos (10 commits, porte manual) | 2–3 commits | M |
 | 2.3 | Boeffla wakelock blocker + hook em `wakeup.c` | 2 commits | M |
 | 2.4 | `SUSPEND_SKIP_SYNC` (avaliar integridade de dados) | 1 commit | M |
@@ -259,6 +262,12 @@ bbe99e5e7  vmscan: wake a single kswapd thread per request
 c882fbadc  sched/ems: energy_step: remove rwsem bottleneck
 27200b8ad  fvmap: runtime Exynos 2100 GPU/CPU undervolting
 ```
+
+Ressalva: `27200b8ad` aplica no texto, mas **não entra no `Image`**. Com
+`CONFIG_CAL_IF=m`, o `fvmap.c` pertence ao `cmupmucal.ko`, carregado de
+`/vendor_dlkm` (erofs, somente leitura). O undervolt runtime deve usar
+`/sys/kernel/percent_margin`, como descrito em
+`docs/alteracoes/21-undervolt-runtime.md`.
 
 Não aplicam (precisam de adaptação manual, contexto diferente):
 
