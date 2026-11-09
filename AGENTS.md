@@ -7,12 +7,14 @@ arquivo **antes** de alterar código, config, build ou documentação.
 
 1. Este `AGENTS.md`.
 2. `docs/alteracoes/README.md` — índice de todas as mudanças já feitas.
-3. O documento específico da área que você vai mexer em `docs/alteracoes/`.
-4. `docs/analise-floppy.md` — o que foi avaliado, o que foi descartado e o
+3. `docs/benchmarks.md` — estado do aparelho, modificações e resultados de
+   benchmark.
+4. O documento específico da área que você vai mexer em `docs/alteracoes/`.
+5. `docs/analise-floppy.md` — o que foi avaliado, o que foi descartado e o
    roadmap das fases.
-5. `docs/build-bakasu-o1s.md` — toolchain, config e build.
-6. `docs/boot-img-e-flash.md` — empacotamento, gravação e rollback.
-7. `docs/creditos.md` — autores e mapa commit local → origem.
+6. `docs/build-bakasu-o1s.md` — toolchain, config e build.
+7. `docs/boot-img-e-flash.md` — empacotamento, gravação e rollback.
+8. `docs/creditos.md` — autores e mapa commit local → origem.
 
 ## 2. Mapa do repositório
 

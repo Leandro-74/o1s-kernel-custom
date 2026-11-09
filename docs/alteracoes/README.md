@@ -91,6 +91,8 @@ Caminhos relativos à raiz do repositório:
 
 - `docs/build-bakasu-o1s.md` — toolchain, config e build manual.
 - `docs/boot-img-e-flash.md` — empacotamento, gravação e rollback.
+- `docs/benchmarks.md` — estado do aparelho, modificações e resultados de
+  benchmark.
 - `docs/validacao-o1s-2026-11-08.md` — validação do kernel com BakaSU.
 - `docs/validacao-floppy-fase1.md` — validação da Fase 1 e imagem `#3`.
 - `docs/analise-floppy.md` — catálogo do Floppy e roadmap das fases.
