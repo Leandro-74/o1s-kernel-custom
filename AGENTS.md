@@ -79,6 +79,12 @@ tethering/TTL, pressão de memória para o kswapd e térmico sob carga para o
 5. **Push só com confirmação.** Ao terminar a tarefa e criar os commits, pare e
    aguarde a confirmação explícita do usuário para dar push. Nunca faça push
    sozinho e nunca use `--force` em branch publicada.
+6. **Benchmarks sempre documentados.** Sempre que o usuário fornecer uma
+   coletânea de resultados de benchmark, atualize `docs/benchmarks.md` com os
+   resultados, o ambiente da rodada (build, kernel, versões dos apps,
+   temperatura e carga inicial) e uma análise curta, em commit próprio
+   (`docs(bench): ...`). Registre apenas os dados fornecidos; o que faltar fica
+   como `não informado`.
 
 ## 5. Regras técnicas do projeto
 
