@@ -63,7 +63,7 @@ Cada documento segue o mesmo formato:
 | 18 | [Wakelock do alarmtimer](18-time-alarmtimer.md) | Reduz o wakeup de 2 s/1 s para 500 ms | `895a6e39a` | parcial |
 | 19 | [`energy_step` sem rwsem](19-sched-energy-step.md) | Remove `policy->rwsem` e reordena o scale-up | `ca145cc42` | parcial |
 | 20 | [Documentação do projeto](20-documentacao.md) | Build, flash, análises, validação e créditos | vários | — |
-| 21 | [Undervolt runtime](21-undervolt-runtime.md) | Offsets por domínio via `/sys/kernel/percent_margin` (módulo da ROM) | documentação | validado (runtime) |
+| 21 | [Undervolt runtime](21-undervolt-runtime.md) | Offsets por domínio via `/sys/kernel/percent_margin` (módulo da ROM) | documentação | validado (runtime e boot) |
 
 Status:
 

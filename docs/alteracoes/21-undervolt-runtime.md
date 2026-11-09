@@ -2,12 +2,12 @@
 
 | Campo | Valor |
 |---|---|
-| Status | validado no runtime; persistência no boot pendente de reboot |
+| Status | validado (runtime e persistência no boot) |
 | Commit(s) | documentação apenas — o patch de kernel foi descartado |
 | Arquivos | `docs/alteracoes/21-undervolt-runtime.md`, `docs/analise-floppy.md` |
 | Origem | interface `percent_margin` do módulo `cmupmucal.ko` da ROM; análise do Floppy `27200b8ad` |
 | Risco | baixo com offsets conservadores; médio se o offset crescer |
-| Validação | teste de `-1%` em `CPUCL0` no kernel da Fase 1, revertido, aparelho estável |
+| Validação | `-1%` em CL0/CL1/CL2/G3D aplicado e reaplicado no boot; aparelho estável |
 
 ## Contexto
 
@@ -116,11 +116,14 @@ Feito no kernel da Fase 1 (`5.4.302-android12-5.4-exynos-ga273fe61262c`):
   exynos_acpm_set_volt_margin: [G3D] +margin -1 uV
   ```
 
-- aparelho estável, `sys.boot_completed=1` e root intactos.
+- aparelho estável, `sys.boot_completed=1` e root intactos;
+- **persistência validada:** após reboot, o `service.sh` reaplicou os quatro
+  offsets em `~14 s` de uptime, com os mesmos registros no `dmesg`;
+- após o reboot o aparelho ficou na tela de bloqueio, mas o `adb` continuou com
+  root (`u:r:ksu:s0`) e os 270 módulos carregaram.
 
 **Pendente:**
 
-- reboot para confirmar que o script do KernelSU reaplica os offsets;
 - teste longo de idle/suspend com `-1%` em `CL0`, `CL1`, `CL2` e `G3D`;
 - medição de drain e temperatura comparada ao build anterior.
 
