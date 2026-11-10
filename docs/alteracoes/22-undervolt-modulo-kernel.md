@@ -2,12 +2,13 @@
 
 | Campo | Valor |
 |---|---|
-| Status | validado (build, runtime e persistência no boot); teste longo pendente |
-| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee` (branch `undervolt-module`) |
+| Status | validado (build, runtime e boot); protocolo de teste longo em andamento |
+| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140` (branch `undervolt-module`) |
 | Arquivos | `drivers/soc/samsung/undervolt/`, `drivers/soc/samsung/{Kconfig,Makefile}`, `arch/arm64/configs/samsung/o1s.config`, `ksu-modules/undervolt-o1s/` |
 | Origem | autoral, sobre os símbolos exportados por `cmupmucal.ko`; abordagem inspirada no Floppy `27200b8ad` |
 | Risco | baixo com offsets conservadores; médio se o offset crescer |
 | Validação | `make modules`, `insmod` manual, sysfs, `dmesg`, `rmmod` e reboot |
+| Protocolo | [Protocolo de validação do undervolt](../protocolo-undervolt.md) |
 
 ## Contexto
 
@@ -142,9 +143,13 @@ config idêntica à `out/.config`):
 
 **Pendente:**
 
-- abrir a WebUI no gerenciador e conferir leitura/escrita pela interface;
-- teste longo de idle e suspend/resume com `1%` nos quatro domínios;
-- comparação de drain e temperatura com o build anterior.
+- executar o [protocolo de validação](../protocolo-undervolt.md) nos casos 0 a 3;
+- escolher o default final e, se ele mudar, recompilar apenas o `.ko` e
+  revalidar boot e suspend;
+- abrir a WebUI no gerenciador e conferir leitura/escrita pela interface.
+
+O harness que aplica os casos e coleta as métricas é local, não versionado, e
+não é exigido pelo kernel. O fluxo e os critérios estão no protocolo.
 
 ## Como evoluir
 
