@@ -165,10 +165,25 @@ Preencher ao final de cada rodada:
 
 | Caso | Idle %/h | Idle mAh/h | CPU GIPS méd/min | CPU temp máx | GPU estab. % | 3DMark | GB single/multi | AnTuTu | Veredito |
 |---|---|---|---|---|---|---|---|---|---|
-| 0 | | | | | | | | | |
+| 0 | 0,329 | 11,1 | — | — | — | — | — | — | controle |
 | 1 | | | | | | | | | |
 | 2 | | | | | | | | | |
 | 3 | | | | | | | | | |
+
+### Rodada 1 — caso 0 (controle)
+
+- Janela: 2026-11-10T14:24:01 → 17:24:01; o encerramento efetivo ocorreu às
+  17:26:34 porque a geração do relatório foi atrasada pelo suspend.
+- Bateria 100% → 99%: 33,68 mAh, **0,329 %/h** e **11,1 mAh/h**.
+- Offsets `0 0 0 0`; modo avião ligado; tela desligada em 100% do tempo; sem
+  carregador e sem reboot.
+- Suspensão: 2 intervalos, 10 984 s no total (maior 7 248 s). O coletor só
+  registrou 2 amostras; por isso o consumo sai das leituras de bateria no
+  início e no fim, e não da média das amostras.
+- Bateria: 23,5 °C de máxima. BIG 25,0 °C, MID 26,0 °C, LITTLE 26,0 °C,
+  G3D 24,0 °C.
+- Alertas: apenas amostras esparsas (esperado em idle). Rodada considerada
+  válida como linha de base.
 
 ## Critério de escolha final
 
