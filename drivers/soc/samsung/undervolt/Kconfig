@@ -21,7 +21,7 @@ config SOC_EXYNOS2100_UV_CL0
 	int "Default undervolt for CPU cluster 0 (%)"
 	depends on SOC_EXYNOS2100_UV
 	range 0 100
-	default 1
+	default 3
 	help
 	  Percentage of undervolt applied to CPU cluster 0 (little cores) when
 	  the module is loaded. Zero disables the offset at load time.
@@ -30,7 +30,7 @@ config SOC_EXYNOS2100_UV_CL1
 	int "Default undervolt for CPU cluster 1 (%)"
 	depends on SOC_EXYNOS2100_UV
 	range 0 100
-	default 1
+	default 3
 	help
 	  Percentage of undervolt applied to CPU cluster 1 (big cores) when
 	  the module is loaded. Zero disables the offset at load time.
@@ -39,7 +39,7 @@ config SOC_EXYNOS2100_UV_CL2
 	int "Default undervolt for CPU cluster 2 (%)"
 	depends on SOC_EXYNOS2100_UV
 	range 0 100
-	default 1
+	default 3
 	help
 	  Percentage of undervolt applied to CPU cluster 2 (prime core) when
 	  the module is loaded. Zero disables the offset at load time.
