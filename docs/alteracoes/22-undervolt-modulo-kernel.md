@@ -2,8 +2,8 @@
 
 | Campo | Valor |
 |---|---|
-| Status | validado (build, runtime, boot e prova física nos PMICs); default `3 3 3 1` |
-| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140`, `25699e292`, `325b10153` (branch `undervolt-module`, mesclada em `resukisu`) |
+| Status | validado (build, runtime, boot e prova física nos PMICs); default `3 3 3 1`, teto de 10% |
+| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140`, `25699e292`, `325b10153`, `a68ae6335`, `2de81995f` (branches `undervolt-module` e `undervolt-ui`, mescladas em `resukisu`) |
 | Arquivos | `drivers/soc/samsung/undervolt/`, `drivers/soc/samsung/{Kconfig,Makefile}`, `arch/arm64/configs/samsung/o1s.config`, `ksu-modules/undervolt-o1s/` |
 | Origem | autoral, sobre os símbolos exportados por `cmupmucal.ko`; abordagem inspirada no Floppy `27200b8ad` |
 | Risco | baixo com offsets conservadores; médio se o offset crescer |
@@ -52,14 +52,15 @@ Sysfs, modo `0600`:
 ```
 
 O valor é a porcentagem de undervolt (positivo). `0` desliga o offset; a faixa
-aceita é `0..100`.
+aceita é `0..10` — acima disso a escrita é recusada com `EINVAL` antes de
+chegar ao ACPM.
 
 O módulo do KernelSU em `ksu-modules/undervolt-o1s/` contém:
 
 - `undervolt_o1s.ko` (copiado do build, não versionado);
 - `service.sh` que espera o `cmupmucal` e faz `insmod`;
 - `module.prop`;
-- `webroot/index.html` com o painel inicial;
+- `webroot/index.html` com o painel WebUI;
 - `package.sh`, que monta `out/ksu-modules/undervolt-o1s.zip`.
 
 ## Mecanismo
@@ -84,13 +85,44 @@ No `module_init`, o módulo:
 3. cria o kobject `/sys/kernel/exynos_uv/`;
 4. aplica os defaults de Kconfig diferentes de zero.
 
-No `store`, o valor é validado em `0..100` e convertido para margem negativa. No
+No `store`, o valor é validado em `0..10` e convertido para margem negativa. No
 `module_exit`, os quatro domínios recebem `0` antes de remover o sysfs.
 
 O `service.sh` roda no `late_start` do KernelSU, espera
 `/sys/kernel/percent_margin` (sinal de que o `cmupmucal` carregou), confere o
 `lsmod` e faz `insmod`. O `.ko` fica no diretório do módulo com contexto
 `u:object_r:ksu_file:s0`.
+
+### Limite e painel
+
+O teto de `10%` é a única proteção automática e fica no kernel, não na
+interface: `echo 11` em qualquer domínio retorna `EINVAL` e o rail não é tocado.
+Isso evita que um valor absurdo digitado no terminal chegue ao PMIC. O controle
+positivo mostrou que `10%` em `cpucl1` a 1,768 GHz já reinicia o aparelho por
+watchdog; o teto impede valores acima disso, mas `10%` continua agressivo e
+exige teste.
+
+Os offsets são voláteis por decisão: o `service.sh` só faz `insmod` e o
+`module_init` aplica o Kconfig. Um reboot sempre volta para `3 3 3 1`, então não
+existe bootloop por valor salvo. Para persistir no futuro seria preciso aplicar
+o candidato, marcar o boot e reverter para o último valor bom se o aparelho
+reiniciar antes da confirmação.
+
+O painel em `webroot/index.html` segue o tema do sistema (claro/escuro) e mostra,
+por domínio, um slider de `0` a `10`, o valor aplicado, um ponto quando há
+alteração pendente e a tensão atual do rail em mV. A tensão sai dos mesmos
+registradores usados na prova física:
+
+| Domínio | PMIC | Registrador |
+|---|---|---|
+| cpucl0 | s2mps24 BUCK2S OUT2 | `0x1f` |
+| cpucl1 | s2mps24 BUCK3S OUT2 | `0x23` |
+| cpucl2 | s2mps24 BUCK4S OUT2 | `0x27` |
+| gpu | s2mps23 BUCK1 | `0x1e` |
+
+`mV = 300 + 6,25 × valor`. É a tensão do OPP em uso, não a do OPP máximo, então
+o número muda com a frequência. Valores acima de `5%` pedem confirmação na
+interface; o botão *Restaurar padrão* volta para `3 3 3 1`.
 
 ### Build e empacotamento
 
@@ -112,7 +144,7 @@ faz o carregamento falhar se os CRCs não baterem; o vermagic precisa continuar
   permanecem iguais.
 - Nenhum layout de struct ou assinatura de símbolo exportado muda.
 - O módulo só importa símbolos `EXPORT_SYMBOL_GPL` já existentes.
-- O sysfs é `0600` (root apenas).
+- O sysfs é `0600` (root apenas) e o valor é limitado a `0..10` no kernel.
 - Sem `CONFIG_MODULE_SIG`; não há exigência de assinatura.
 - O módulo da ROM aparece como `[permanent]`; o nosso é descarregável
   (`CONFIG_MODULE_UNLOAD=y`).
@@ -131,7 +163,8 @@ config idêntica à `out/.config`):
   `exynos_acpm_set_volt_margin: [CPUCL0] +margin -1 uV` (e CL1, CL2, G3D);
 - sysfs criado com os quatro atributos em `0600`, lendo `1`;
 - escrita de `2` em `cpucl0_uv_percent` gera `[CPUCL0] +margin -2 uV`;
-- escrita de `101` é recusada com `EINVAL`;
+- escrita de `101` (e de `11`, `20` ou `-1`) é recusada com `EINVAL`, sem tocar
+  no rail;
 - `rmmod` restaura os quatro domínios para `0` e remove o sysfs;
 - recarregar reaplica os defaults;
 - `service.sh` executado no contexto `u:r:ksu:s0` carrega o módulo;
@@ -140,6 +173,18 @@ config idêntica à `out/.config`):
 - `sys.boot_completed=1`, release esperado, root `u:r:ksu:s0` e 272 módulos
   carregados (271 da ROM + `undervolt_o1s`);
 - o gerenciador reconhece o módulo com `web: true`.
+
+### Limite de 10% e painel novo (versão 2.1)
+
+- `make modules`: `exit=0`, 271 módulos, vermagic inalterado;
+- `rmmod` + `insmod` do `.ko` novo reaplicou `3 3 3 1`;
+- `11`, `20`, `101` e `-1` nos quatro domínios retornam `EINVAL`, os valores
+  continuam `3 3 3 1` e o `dmesg` não registra margem nova;
+- o comando de leitura dos rails usado pelo painel devolve os quatro valores em
+  decimal no aparelho (ex.: `70`, `52`, `61`, `36`);
+- o painel passou por 28 verificações em navegador com dados simulados: estado
+  inicial, ponto de pendência, faixas de cor, gravação, confirmação acima de
+  `5%`, cancelamento e reset.
 
 ### Default final
 
@@ -226,7 +271,8 @@ não é exigido pelo kernel. O fluxo e os critérios estão no protocolo.
 
 ## Como evoluir
 
-- Suba um domínio por vez e no máximo `1%` por etapa.
+- Suba um domínio por vez e no máximo `1%` por etapa; o teto de `10%` é fixo no
+  código (`UV_MAX_PERCENT`) e exige recompilar o `.ko` para mudar.
 - O teste mais sensível é idle longo e suspend: é onde o undervolt agressivo
   causa reboot aleatório.
 - Se houver instabilidade, zere o domínio afetado e reinicie.
