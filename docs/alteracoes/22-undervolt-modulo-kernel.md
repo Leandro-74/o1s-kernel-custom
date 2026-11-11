@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Status | validado (build, runtime, boot e prova física nos PMICs); default `3 3 3 1` |
-| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140`, `25699e292` (branch `undervolt-module`) |
+| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140`, `25699e292`, `325b10153` (branch `undervolt-module`, mesclada em `resukisu`) |
 | Arquivos | `drivers/soc/samsung/undervolt/`, `drivers/soc/samsung/{Kconfig,Makefile}`, `arch/arm64/configs/samsung/o1s.config`, `ksu-modules/undervolt-o1s/` |
 | Origem | autoral, sobre os símbolos exportados por `cmupmucal.ko`; abordagem inspirada no Floppy `27200b8ad` |
 | Risco | baixo com offsets conservadores; médio se o offset crescer |
