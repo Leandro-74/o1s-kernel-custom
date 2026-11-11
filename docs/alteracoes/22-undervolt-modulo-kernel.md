@@ -2,8 +2,8 @@
 
 | Campo | Valor |
 |---|---|
-| Status | validado (build, runtime e boot); protocolo de teste longo em andamento |
-| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140` (branch `undervolt-module`) |
+| Status | validado (build, runtime e boot); default `3 3 3 1` definido |
+| Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140`, `25699e292` (branch `undervolt-module`) |
 | Arquivos | `drivers/soc/samsung/undervolt/`, `drivers/soc/samsung/{Kconfig,Makefile}`, `arch/arm64/configs/samsung/o1s.config`, `ksu-modules/undervolt-o1s/` |
 | Origem | autoral, sobre os símbolos exportados por `cmupmucal.ko`; abordagem inspirada no Floppy `27200b8ad` |
 | Risco | baixo com offsets conservadores; médio se o offset crescer |
@@ -36,9 +36,9 @@ Kconfig:
 
 ```text
 CONFIG_SOC_EXYNOS2100_UV=m
-CONFIG_SOC_EXYNOS2100_UV_CL0=1
-CONFIG_SOC_EXYNOS2100_UV_CL1=1
-CONFIG_SOC_EXYNOS2100_UV_CL2=1
+CONFIG_SOC_EXYNOS2100_UV_CL0=3
+CONFIG_SOC_EXYNOS2100_UV_CL1=3
+CONFIG_SOC_EXYNOS2100_UV_CL2=3
 CONFIG_SOC_EXYNOS2100_UV_GPU=1
 ```
 
@@ -137,16 +137,32 @@ config idêntica à `out/.config`):
 - `service.sh` executado no contexto `u:r:ksu:s0` carrega o módulo;
 - após reboot, o módulo carregou sozinho em ~14 s, os quatro offsets estavam em
   `1` e o `dmesg` registrou os quatro pedidos;
-- `sys.boot_completed=1`, release esperado, root `u:r:ksu:s0` e 271 módulos
-  carregados (270 da ROM + `undervolt_o1s`);
+- `sys.boot_completed=1`, release esperado, root `u:r:ksu:s0` e 272 módulos
+  carregados (271 da ROM + `undervolt_o1s`);
 - o gerenciador reconhece o módulo com `web: true`.
+
+### Default final
+
+O [protocolo](../protocolo-undervolt.md) rodou os casos 0 e 1 em idle; os dois
+empataram dentro da resolução do medidor (~10% em 3 h) e não houve
+instabilidade. Por decisão do usuário, os casos 2 e 3 foram dispensados e o
+default ficou `3 3 3 1` — 3% nos três clusters de CPU e 1% na GPU —, valor que
+já vinha se mostrando estável em uso real.
+
+Recompilado apenas o `.ko` (`make modules`, sem `Image` novo):
+
+- `insmod` do `.ko` novo aplicou `3 3 3 1`;
+- `dmesg`: `undervolt: ready (cpucl0=3%, cpucl1=3%, cpucl2=3%, gpu=1%)`;
+- o `cmupmucal` registrou `[CPUCL0] +margin -3 uV`, `[CPUCL1] -3 uV`,
+  `[CPUCL2] -3 uV` e `[G3D] -1 uV`;
+- `modinfo` mantém o vermagic
+  `5.4.302-android12-5.4-exynos-ga273fe61262c` e `depends: cmupmucal`.
 
 **Pendente:**
 
-- executar o [protocolo de validação](../protocolo-undervolt.md) nos casos 0 a 3;
-- escolher o default final e, se ele mudar, recompilar apenas o `.ko` e
-  revalidar boot e suspend;
-- abrir a WebUI no gerenciador e conferir leitura/escrita pela interface.
+- abrir a WebUI no gerenciador e conferir leitura/escrita pela interface;
+- se for preciso separar diferenças de consumo menores que a resolução do
+  medidor, fazer uma rodada noturna longa (8 h ou mais).
 
 O harness que aplica os casos e coleta as métricas é local, não versionado, e
 não é exigido pelo kernel. O fluxo e os critérios estão no protocolo.

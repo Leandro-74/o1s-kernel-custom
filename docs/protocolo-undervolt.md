@@ -167,8 +167,8 @@ Preencher ao final de cada rodada:
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | 0,329 | 11,1 | — | — | — | — | — | — | controle |
 | 1 | 0,329 | 8,6 | — | — | — | — | — | — | empate técnico com 0 |
-| 2 | | | | | | | | | |
-| 3 | | | | | | | | | |
+| 2 | não executado | — | — | — | — | — | — | — | dispensado |
+| 3 | não executado | — | — | — | — | — | — | — | adotado como default |
 
 ### Rodada 1 — caso 0 (controle)
 
@@ -216,6 +216,15 @@ efeito do undervolt:
 
 Se os casos ficarem empatados dentro dessa faixa, a decisão deve sair do
 stress (estabilidade e temperatura) ou de uma rodada noturna mais longa.
+
+### Decisão
+
+Com os casos 0 e 1 empatados e nenhuma instabilidade, o usuário decidiu
+encerrar a fase de medição sem rodar os casos 2 e 3: testes próprios com `3%`
+nos três clusters e `1%` na GPU já vinham se mostrando estáveis. O default do
+kernel foi fixado em `3 3 3 1` (o caso 3 deste protocolo), o `.ko` foi
+recompilado e o boot revalidado. A escolha abre mão da comparação de consumo
+entre 2 e 3 em troca de não atrasar o restante do projeto.
 
 ## Critério de escolha final
 
