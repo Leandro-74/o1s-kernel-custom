@@ -24,10 +24,10 @@ coletânea de resultados é fornecida (regra 6 do `AGENTS.md`).
 | Android / API | 16 / 36 |
 | Kernel | `5.4.302-android12-5.4-exynos-ga273fe61262c` |
 | Root | BakaSU, driver `35257` |
-| Módulos carregados | 271 (inclui `undervolt_o1s`) |
+| Módulos carregados | 272 (271 da ROM + `undervolt_o1s`) |
 | GPU | Mali-G78 MP14, KMD e UMD `r38p0-01eac0` |
-| Undervolt | módulo ativo, margem padrão de 1% |
-| Última atualização | 2026-11-09 |
+| Undervolt | módulo ativo, padrão `3 3 3 1` (CPU 3%, GPU 1%) |
+| Última atualização | 2026-11-11 |
 
 ## Modificações realizadas
 
