@@ -87,10 +87,11 @@
   </div>
 
   <p class="note">
-    O valor é a porcentagem de <strong>undervolt</strong>: <code>1</code> significa
-    reduzir 1% da tensão do domínio. <code>0</code> desliga o offset.
-    O teste mais sensível é idle longo e suspend; comece por 1% e suba um domínio
-    por vez. Em caso de instabilidade, use <strong>Zerar</strong> e reinicie.
+    O valor é a porcentagem de <strong>undervolt</strong>: <code>3</code> significa
+    reduzir 3% da tensão do domínio. <code>0</code> desliga o offset. O padrão do
+    kernel é <code>3 3 3 1</code> (CL0, CL1, CL2 e GPU). Para subir além disso,
+    mexa em um domínio por vez e teste idle longo e suspend; em caso de
+    instabilidade, use <strong>Zerar</strong> e reinicie.
   </p>
 
 <script>
