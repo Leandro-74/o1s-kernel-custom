@@ -64,7 +64,7 @@ Cada documento segue o mesmo formato:
 | 19 | [`energy_step` sem rwsem](19-sched-energy-step.md) | Remove `policy->rwsem` e reordena o scale-up | `ca145cc42` | parcial |
 | 20 | [Documentação do projeto](20-documentacao.md) | Build, flash, análises, validação e créditos | vários | — |
 | 21 | [Undervolt runtime](21-undervolt-runtime.md) | Offsets por domínio via `/sys/kernel/percent_margin` (módulo da ROM) | documentação | substituído pelo 22 |
-| 22 | [Undervolt por módulo de kernel](22-undervolt-modulo-kernel.md) | Módulo `undervolt_o1s.ko`, sysfs `exynos_uv` e painel KernelSU | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `25699e292`, `a68ae6335`, `2de81995f` | validado; prova física nos PMICs; default `3 3 3 1`, teto de 10% |
+| 22 | [Undervolt por módulo de kernel](22-undervolt-modulo-kernel.md) | Módulo `undervolt_o1s.ko`, sysfs `exynos_uv` e painel KernelSU | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `25699e292`, `a68ae6335`, `2de81995f` | validado; prova física nos PMICs e painel WebUI; default `3 3 3 1`, teto de 10% |
 
 Status:
 

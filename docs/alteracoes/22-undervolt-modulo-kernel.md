@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | validado (build, runtime, boot e prova física nos PMICs); default `3 3 3 1`, teto de 10% |
+| Status | validado (build, runtime, boot, prova física nos PMICs e painel WebUI); default `3 3 3 1`, teto de 10% |
 | Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140`, `25699e292`, `325b10153`, `a68ae6335`, `2de81995f` (branches `undervolt-module` e `undervolt-ui`, mescladas em `resukisu`) |
 | Arquivos | `drivers/soc/samsung/undervolt/`, `drivers/soc/samsung/{Kconfig,Makefile}`, `arch/arm64/configs/samsung/o1s.config`, `ksu-modules/undervolt-o1s/` |
 | Origem | autoral, sobre os símbolos exportados por `cmupmucal.ko`; abordagem inspirada no Floppy `27200b8ad` |
@@ -184,7 +184,9 @@ config idêntica à `out/.config`):
   decimal no aparelho (ex.: `70`, `52`, `61`, `36`);
 - o painel passou por 28 verificações em navegador com dados simulados: estado
   inicial, ponto de pendência, faixas de cor, gravação, confirmação acima de
-  `5%`, cancelamento e reset.
+  `5%`, cancelamento e reset;
+- painel aberto no gerenciador do KernelSU: carrega, mostra a tensão atual de
+  cada rail e aplica/restaura os offsets.
 
 ### Default final
 
@@ -205,7 +207,6 @@ Recompilado apenas o `.ko` (`make modules`, sem `Image` novo):
 
 **Pendente:**
 
-- abrir a WebUI no gerenciador e conferir leitura/escrita pela interface;
 - se for preciso separar diferenças de consumo menores que a resolução do
   medidor, fazer uma rodada noturna longa (8 h ou mais).
 
