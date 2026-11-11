@@ -3,104 +3,227 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Undervolt o1s</title>
+<meta name="color-scheme" content="light dark">
+<title>Undervolt</title>
 <style>
   :root {
-    --bg: #0f1115;
-    --card: #181b22;
-    --line: #2a2f3a;
-    --text: #e8eaed;
-    --muted: #8b93a1;
-    --accent: #4ade80;
-    --danger: #f87171;
+    --bg: #f2f4f7;
+    --surface: #ffffff;
+    --line: #e3e6eb;
+    --text: #101114;
+    --muted: #6e7787;
+    --accent: #0381fe;
+    --accent-soft: #e8f1fe;
+    --warn: #c47b0a;
+    --warn-soft: #fdf3e2;
+    --danger: #d8343b;
+    --danger-soft: #fdeaea;
+    --track: #dfe3ea;
+    --radius: 20px;
   }
-  * { box-sizing: border-box; }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101114;
+      --surface: #1b1c1e;
+      --line: #2a2c2f;
+      --text: #f2f4f7;
+      --muted: #9aa1ac;
+      --accent: #4da3ff;
+      --accent-soft: #14263a;
+      --warn: #f5b65c;
+      --warn-soft: #33270f;
+      --danger: #ff6b6b;
+      --danger-soft: #3a1c1d;
+      --track: #34373b;
+    }
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
   body {
     margin: 0;
-    padding: 20px 16px calc(24px + env(safe-area-inset-bottom));
+    padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));
     background: var(--bg);
     color: var(--text);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     font-size: 15px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
   }
-  h1 { font-size: 20px; margin: 0 0 4px; }
-  .sub { color: var(--muted); font-size: 13px; margin: 0 0 18px; }
-  .status {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--card); border: 1px solid var(--line);
-    border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;
+
+  h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.2px; margin: 0 0 2px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 20px; }
+
+  .pill {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border-radius: 16px;
+    padding: 12px 16px; margin-bottom: 16px;
     font-size: 14px;
   }
-  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
-  .dot.on { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-  .dot.off { background: var(--danger); }
-  .grid { display: grid; gap: 12px; }
-  .card {
-    background: var(--card); border: 1px solid var(--line);
-    border-radius: 14px; padding: 14px;
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: 0 0 auto; }
+  .dot.on { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .dot.off { background: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
+  .pill-text { flex: 1; }
+  .pill-val { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .card { background: var(--surface); border-radius: var(--radius); overflow: hidden; }
+  .item { padding: 16px 18px 14px; }
+  .item + .item { border-top: 1px solid var(--line); }
+
+  .item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .label { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 7px; }
+  .hint { color: var(--muted); font-size: 13px; }
+  .pending {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent); display: none;
   }
-  .row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .name { font-weight: 600; }
-  .tag { color: var(--muted); font-size: 12px; font-weight: 400; margin-left: 6px; }
-  .val {
-    font-variant-numeric: tabular-nums;
-    font-size: 22px; font-weight: 700; color: var(--accent);
+  .item.dirty .pending { display: inline-block; }
+
+  .badge {
+    display: inline-flex; align-items: baseline; gap: 1px;
+    font-variant-numeric: tabular-nums; color: var(--accent);
+    background: var(--accent-soft); border-radius: 12px;
+    padding: 4px 11px; flex: 0 0 auto;
   }
-  .val.zero { color: var(--muted); }
+  .badge .num { font-size: 20px; font-weight: 700; }
+  .badge .pct { font-size: 12px; font-weight: 600; opacity: .8; }
+  .item.warn .badge { color: var(--warn); background: var(--warn-soft); }
+  .item.danger .badge { color: var(--danger); background: var(--danger-soft); }
+
   input[type=range] {
-    width: 100%; accent-color: var(--accent);
-    margin: 2px 0 6px;
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 28px; margin: 10px 0 0;
+    background: transparent; display: block;
   }
-  .scale { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
-  .actions { display: flex; gap: 10px; margin-top: 18px; }
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 4px; border-radius: 2px;
+    background: linear-gradient(to right, currentColor var(--fill, 0%), var(--track) var(--fill, 0%));
+    color: var(--accent);
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px; height: 24px; margin-top: -10px;
+    border-radius: 50%; background: #fff; border: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .28);
+  }
+  .item.warn input[type=range]::-webkit-slider-runnable-track { color: var(--warn); }
+  .item.danger input[type=range]::-webkit-slider-runnable-track { color: var(--danger); }
+  input[type=range]:disabled::-webkit-slider-thumb { background: var(--track); box-shadow: none; }
+  input[type=range]:disabled::-webkit-slider-runnable-track {
+    background: var(--track) !important;
+  }
+
+  /* Firefox: só para o preview local sair igual ao WebView do Android. */
+  input[type=range]::-moz-range-track {
+    height: 4px; border-radius: 2px; background: var(--track);
+  }
+  input[type=range]::-moz-range-progress {
+    height: 4px; border-radius: 2px; background: var(--accent);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 24px; height: 24px; border: 0; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .28);
+  }
+  .item.warn input[type=range]::-moz-range-progress { background: var(--warn); }
+  .item.danger input[type=range]::-moz-range-progress { background: var(--danger); }
+
+  .item-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 2px; color: var(--muted); font-size: 12.5px;
+  }
+  .item-foot .rail { font-variant-numeric: tabular-nums; }
+
+  .foot { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 16px 2px 0; }
+
+  .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 6px; }
   button {
-    flex: 1; border: 0; border-radius: 12px; padding: 14px;
-    font-size: 15px; font-weight: 600; color: #0b0d10;
-    background: var(--accent);
+    font-family: inherit; font-size: 16px; font-weight: 600;
+    border: 0; border-radius: 26px; padding: 15px 18px;
+    color: #fff; background: var(--accent);
+    transition: opacity .15s, transform .1s;
   }
-  button.secondary {
-    background: transparent; color: var(--text);
-    border: 1px solid var(--line);
+  button:active { transform: scale(.985); }
+  button:disabled { opacity: .4; }
+  button.text { background: transparent; color: var(--accent); padding: 12px; }
+  button.text:disabled { opacity: .4; }
+
+  .scrim {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, .42);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; z-index: 10;
   }
-  button:active { opacity: .75; }
-  .note {
-    color: var(--muted); font-size: 12px; line-height: 1.5;
-    margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px;
+  .scrim[hidden] { display: none; }
+  .dialog {
+    background: var(--surface); border-radius: 26px; padding: 24px 22px 16px;
+    width: 100%; max-width: 360px;
   }
-  .warn { color: var(--danger); }
+  .dialog h2 { font-size: 19px; margin: 0 0 8px; }
+  .dialog p { color: var(--muted); font-size: 14px; margin: 0 0 12px; }
+  .dialog-actions { display: flex; justify-content: flex-end; gap: 4px; margin-top: 4px; }
+  .dialog-actions button {
+    background: transparent; color: var(--accent);
+    font-size: 15px; font-weight: 600; padding: 12px 16px;
+  }
+  .dialog-actions button:active { background: var(--accent-soft); }
 </style>
 </head>
 <body>
-  <h1>Undervolt o1s</h1>
-  <p class="sub">Exynos 2100 &middot; offsets de tensão por domínio</p>
 
-  <div class="status">
-    <span id="dot" class="dot"></span>
-    <span id="statusText">Verificando módulo...</span>
+<header>
+  <h1>Undervolt</h1>
+  <p class="sub">Exynos 2100</p>
+</header>
+
+<div class="pill">
+  <span class="dot" id="dot"></span>
+  <span class="pill-text" id="pillText">Verificando módulo…</span>
+  <span class="pill-val" id="pillVal"></span>
+</div>
+
+<section class="card" id="card"></section>
+
+<p class="foot">
+  Percentual de redução sobre a tensão do domínio. O padrão do módulo é
+  <strong>3 / 3 / 3 / 1</strong>. O teto é <strong>10%</strong>; acima de 5% o
+  aparelho pode reiniciar.
+</p>
+
+<div class="actions">
+  <button id="apply" disabled>Aplicar</button>
+  <button id="reset" class="text" disabled>Restaurar padrão</button>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <h2 id="dialogTitle">Valor acima do testado</h2>
+    <p id="dialogBody"></p>
+    <div class="dialog-actions">
+      <button class="text" id="dialogCancel">Cancelar</button>
+      <button id="dialogOk">Aplicar</button>
+    </div>
   </div>
-
-  <div id="grid" class="grid"></div>
-
-  <div class="actions">
-    <button id="apply">Aplicar</button>
-    <button id="reset" class="secondary">Zerar</button>
-  </div>
-
-  <p class="note">
-    O valor é a porcentagem de <strong>undervolt</strong>: <code>3</code> significa
-    reduzir 3% da tensão do domínio. <code>0</code> desliga o offset. O padrão do
-    kernel é <code>3 3 3 1</code> (CL0, CL1, CL2 e GPU). Para subir além disso,
-    mexa em um domínio por vez e teste idle longo e suspend; em caso de
-    instabilidade, use <strong>Zerar</strong> e reinicie.
-  </p>
+</div>
 
 <script>
 const DOMAINS = [
-  { key: "cpucl0", label: "CPU Little", tag: "CL0" },
-  { key: "cpucl1", label: "CPU Big",    tag: "CL1" },
-  { key: "cpucl2", label: "CPU Prime",  tag: "CL2" },
-  { key: "gpu",    label: "GPU",        tag: "G3D" }
+  { key: "cpucl0", label: "CPU Little", hint: "CL0 · 4 núcleos", pmic: "s2mps24", reg: "1f" },
+  { key: "cpucl1", label: "CPU Big",    hint: "CL1 · 3 núcleos", pmic: "s2mps24", reg: "23" },
+  { key: "cpucl2", label: "CPU Prime",  hint: "CL2 · 1 núcleo",  pmic: "s2mps24", reg: "27" },
+  { key: "gpu",    label: "GPU",        hint: "G3D · Mali-G78",  pmic: "s2mps23", reg: "1e" }
 ];
+
+const DEFAULT = { cpucl0: 3, cpucl1: 3, cpucl2: 3, gpu: 1 };
+const MAX = 10;
+const WARN_AT = 4;
+const DANGER_AT = 7;
+const CONFIRM_AT = 5;
+
+let applied = {};
+let draft = {};
+let rails = [null, null, null, null];
+let loaded = false;
 
 function sh(cmd) {
   try {
@@ -115,86 +238,227 @@ function path(key) {
   return "/sys/kernel/exynos_uv/" + key + "_uv_percent";
 }
 
-function refreshStatus() {
-  const dot = document.getElementById("dot");
-  const text = document.getElementById("statusText");
-  const mod = sh("lsmod | grep -c '^undervolt_o1s '");
-  const sysfs = sh("ls /sys/kernel/exynos_uv/ 2>/dev/null | wc -l");
-
-  if (mod && mod !== "0" && sysfs && sysfs !== "0") {
-    dot.className = "dot on";
-    text.textContent = "Módulo carregado";
-  } else {
-    dot.className = "dot off";
-    text.textContent = "Módulo não carregado";
-  }
+function readInt(cmd) {
+  const raw = sh(cmd);
+  const n = parseInt(raw, 10);
+  return isNaN(n) ? null : n;
 }
 
-function build() {
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
+function railCommand() {
+  let cmd =
+    'p24=$(ls -d /sys/class/pmic/s2mps24@* 2>/dev/null);' +
+    'p23=$(ls -d /sys/class/pmic/s2mps23@* 2>/dev/null);' +
+    'reg(){ if [ -z "$1" ]; then echo "?"; return; fi;' +
+    ' printf "0x01%s" "$3" > "$1/$2_read" 2>/dev/null;' +
+    ' v=$(sed "s/.*: //" "$1/$2_read" 2>/dev/null);' +
+    ' if [ -z "$v" ]; then echo "?"; else echo $((v)); fi; };';
   DOMAINS.forEach((d) => {
-    const raw = sh("cat " + path(d.key) + " 2>/dev/null");
-    const value = raw === "" ? 0 : Math.max(0, Math.min(100, parseInt(raw, 10) || 0));
+    const dir = d.pmic === "s2mps24" ? "$p24" : "$p23";
+    cmd += 'echo "$(reg ' + dir + " " + d.pmic + " " + d.reg + ')";';
+  });
+  return cmd;
+}
 
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML =
-      '<div class="row">' +
-        '<div class="name">' + d.label + '<span class="tag">' + d.tag + '</span></div>' +
-        '<div class="val" id="val-' + d.key + '">' + value + '%</div>' +
-      '</div>' +
-      '<input type="range" min="0" max="20" step="1" value="' + value + '" id="rng-' + d.key + '">' +
-      '<div class="scale"><span>0%</span><span>10%</span><span>20%</span></div>';
-
-    grid.appendChild(card);
-
-    const rng = card.querySelector("input");
-    const val = card.querySelector(".val");
-    rng.addEventListener("input", () => {
-      val.textContent = rng.value + "%";
-      val.className = "val" + (rng.value === "0" ? " zero" : "");
-    });
+function readRails() {
+  const out = sh(railCommand());
+  const parts = out.split(/\s+/).filter((s) => s !== "");
+  rails = DOMAINS.map((_, i) => {
+    const v = parseInt(parts[i], 10);
+    return isNaN(v) ? null : v;
   });
 }
 
-function writeAll(values) {
-  let failures = 0;
+function railMv(index) {
+  const v = rails[index];
+  if (v == null) return null;
+  return Math.round(300 + 6.25 * v);
+}
+
+function refreshStatus() {
+  const dot = document.getElementById("dot");
+  const text = document.getElementById("pillText");
+  const val = document.getElementById("pillVal");
+
+  loaded = sh("lsmod | grep -c '^undervolt_o1s '") !== "0";
+  dot.className = "dot " + (loaded ? "on" : "off");
+  text.textContent = loaded ? "Módulo carregado" : "Módulo não carregado";
+  val.textContent = loaded
+    ? DOMAINS.map((d) => applied[d.key]).join(" / ")
+    : "";
+}
+
+function build() {
+  const card = document.getElementById("card");
+  card.innerHTML = "";
+  DOMAINS.forEach((d, i) => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.dataset.key = d.key;
+    item.innerHTML =
+      '<div class="item-top">' +
+        '<div class="meta">' +
+          '<span class="label">' + d.label + '<span class="pending"></span></span>' +
+          '<span class="hint">' + d.hint + '</span>' +
+        '</div>' +
+        '<span class="badge"><span class="num">0</span><span class="pct">%</span></span>' +
+      '</div>' +
+      '<input type="range" min="0" max="' + MAX + '" step="1" value="0" aria-label="' +
+        d.label + '">' +
+      '<div class="item-foot">' +
+        '<span class="rail">tensão atual —</span>' +
+        '<span>0–' + MAX + '%</span>' +
+      '</div>';
+
+    const input = item.querySelector("input");
+    input.addEventListener("input", () => {
+      draft[d.key] = parseInt(input.value, 10);
+      paint(d.key);
+      updateActions();
+    });
+
+    card.appendChild(item);
+  });
+}
+
+function band(v) {
+  if (v >= DANGER_AT) return "danger";
+  if (v >= WARN_AT) return "warn";
+  return "";
+}
+
+function paint(key) {
+  const item = document.querySelector('.item[data-key="' + key + '"]');
+  if (!item) return;
+  const input = item.querySelector("input");
+  const num = item.querySelector(".num");
+  const value = draft[key];
+
+  num.textContent = value;
+  input.value = value;
+  input.style.setProperty("--fill", (value / MAX) * 100 + "%");
+  item.className = "item " + band(value);
+  item.classList.toggle("dirty", value !== applied[key]);
+}
+
+function paintRails() {
+  DOMAINS.forEach((d, i) => {
+    const el = document.querySelector('.item[data-key="' + d.key + '"] .rail');
+    if (!el) return;
+    const mv = railMv(i);
+    el.textContent = "tensão atual " + (mv == null ? "—" : mv + " mV");
+  });
+}
+
+function dirtyKeys() {
+  return DOMAINS.map((d) => d.key).filter((k) => draft[k] !== applied[k]);
+}
+
+function updateActions() {
+  const dirty = dirtyKeys().length > 0;
+  document.getElementById("apply").disabled = !loaded || !dirty;
+  document.getElementById("reset").disabled = !loaded;
   DOMAINS.forEach((d) => {
-    const v = values[d.key];
-    const out = sh(
-      "sh -c 'echo " + v + " > " + path(d.key) + " && echo ok || echo fail'"
-    );
-    if (out.indexOf("ok") === -1) failures++;
+    const item = document.querySelector('.item[data-key="' + d.key + '"]');
+    if (item) item.querySelector("input").disabled = !loaded;
+  });
+}
+
+function load(keepDraft) {
+  const prev = draft;
+  const dirty = keepDraft ? dirtyKeys() : [];
+  applied = {};
+  DOMAINS.forEach((d) => {
+    const v = readInt("cat " + path(d.key) + " 2>/dev/null");
+    applied[d.key] = v == null ? DEFAULT[d.key] : v;
+  });
+  draft = Object.assign({}, applied);
+  dirty.forEach((k) => { draft[k] = prev[k]; });
+  refreshStatus();
+  if (loaded) readRails();
+  DOMAINS.forEach((d) => paint(d.key));
+  paintRails();
+  updateActions();
+}
+
+function writeValues(keys) {
+  let failures = [];
+  keys.forEach((key) => {
+    const out = sh("sh -c 'echo " + draft[key] + " > " + path(key) + " && echo ok || echo fail'");
+    if (out.indexOf("ok") === -1) failures.push(key);
   });
   return failures;
 }
 
-document.getElementById("apply").addEventListener("click", () => {
-  const values = {};
-  DOMAINS.forEach((d) => {
-    values[d.key] = document.getElementById("rng-" + d.key).value;
-  });
-  const failures = writeAll(values);
-  if (failures) {
-    ksu.toast("Falha ao aplicar em " + failures + " domínio(s)");
+function toast(msg) {
+  try {
+    ksu.toast(msg);
+  } catch (e) {}
+}
+
+function applyNow(keys) {
+  const failures = writeValues(keys);
+  load();
+  if (failures.length) {
+    toast("Falha em " + failures.length + " domínio(s)");
   } else {
-    ksu.toast("Offsets aplicados");
+    toast("Undervolt atualizado");
   }
-  refreshStatus();
+}
+
+function askConfirm(keys) {
+  const body = document.getElementById("dialogBody");
+  const names = keys
+    .filter((k) => draft[k] > CONFIRM_AT)
+    .map((k) => DOMAINS.find((d) => d.key === k).label + " " + draft[k] + "%");
+  body.textContent =
+    names.join(", ") + ". Acima de " + CONFIRM_AT +
+    "% não há teste longo o bastante; o aparelho pode reiniciar sozinho.";
+  document.getElementById("scrim").hidden = false;
+  pendingKeys = keys;
+}
+
+let pendingKeys = null;
+
+document.getElementById("dialogCancel").addEventListener("click", () => {
+  document.getElementById("scrim").hidden = true;
+  pendingKeys = null;
+});
+
+document.getElementById("dialogOk").addEventListener("click", () => {
+  document.getElementById("scrim").hidden = true;
+  const keys = pendingKeys;
+  pendingKeys = null;
+  if (keys) applyNow(keys);
+});
+
+document.getElementById("apply").addEventListener("click", () => {
+  const keys = dirtyKeys();
+  if (!keys.length) return;
+  if (keys.some((k) => draft[k] > CONFIRM_AT)) {
+    askConfirm(keys);
+  } else {
+    applyNow(keys);
+  }
 });
 
 document.getElementById("reset").addEventListener("click", () => {
-  const values = {};
-  DOMAINS.forEach((d) => { values[d.key] = 0; });
-  const failures = writeAll(values);
-  ksu.toast(failures ? "Falha ao zerar" : "Offsets zerados");
-  build();
-  refreshStatus();
+  DOMAINS.forEach((d) => { draft[d.key] = DEFAULT[d.key]; });
+  applyNow(DOMAINS.map((d) => d.key));
 });
 
-refreshStatus();
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") load(true);
+});
+
+setInterval(() => {
+  if (document.visibilityState === "visible" && loaded) {
+    readRails();
+    paintRails();
+  }
+}, 5000);
+
 build();
+load();
 </script>
 </body>
 </html>
