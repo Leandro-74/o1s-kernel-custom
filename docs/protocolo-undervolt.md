@@ -166,7 +166,7 @@ Preencher ao final de cada rodada:
 | Caso | Idle %/h | Idle mAh/h | CPU GIPS méd/min | CPU temp máx | GPU estab. % | 3DMark | GB single/multi | AnTuTu | Veredito |
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | 0,329 | 11,1 | — | — | — | — | — | — | controle |
-| 1 | | | | | | | | | |
+| 1 | 0,329 | 8,6 | — | — | — | — | — | — | empate técnico com 0 |
 | 2 | | | | | | | | | |
 | 3 | | | | | | | | | |
 
@@ -184,6 +184,38 @@ Preencher ao final de cada rodada:
   G3D 24,0 °C.
 - Alertas: apenas amostras esparsas (esperado em idle). Rodada considerada
   válida como linha de base.
+
+### Rodada 2 — caso 1 (idle)
+
+A primeira tentativa (2026-11-10 18:58 → 21:58) foi descartada: a tela acendeu
+por volta das 20:14 e o encerramento atrasou 34 min porque nada acordou o
+aparelho no fim da janela. Repetida em 2026-11-11:
+
+- Janela: 07:35:12 → 10:37:25 (3,037 h); fim previsto 10:35:12.
+- Bateria 100% → 99%: 26,19 mAh, **0,329 %/h** e **8,6 mAh/h**.
+- Offsets `1 1 1 1`; modo avião ligado; tela desligada em 100% do tempo; sem
+  carregador e sem reboot.
+- Suspensão: 1 intervalo de 3 730 s. O coletor registrou 1 amostra.
+- Bateria: 20,9 °C de máxima (a rodada do caso 0 foi a 23,5 °C).
+
+Comparação: nas horas 2 e 3 as duas rodadas consumiram exatamente os mesmos
+26,19 mAh; a diferença de 7,48 mAh no total está nas duas primeiras marcas do
+medidor e equivale a duas unidades do contador. Ver a nota sobre resolução
+abaixo.
+
+### Resolução da medição
+
+O contador de carga (`charge_counter`) anda em passos de 0,1% (~3,7 mAh). Numa
+janela de 3 h o consumo fica em ~9 passos, ou seja, a incerteza por rodada é da
+ordem de ±6% a ±11%. Diferenças menores que isso entre casos são ruído, não
+efeito do undervolt:
+
+- caso 0: 9 passos (33,68 mAh);
+- caso 1: 7 passos (26,19 mAh);
+- horas 2 e 3 de ambas: 7 passos (26,19 mAh).
+
+Se os casos ficarem empatados dentro dessa faixa, a decisão deve sair do
+stress (estabilidade e temperatura) ou de uma rodada noturna mais longa.
 
 ## Critério de escolha final
 
