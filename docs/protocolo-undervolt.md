@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | em execução |
+| Status | concluído — default `3 3 3 1` |
 | Mudança validada | [22 — Undervolt por módulo de kernel](alteracoes/22-undervolt-modulo-kernel.md) |
 | Casos | 0, 1, 2 e 3 (ver tabela) |
 | Duração total | ~17 h, em 3 a 4 dias |
@@ -112,7 +112,7 @@ Fluxo pelo painel do KernelSU:
 - **Stress GPU:** mesmo fluxo, com o Wild Life Stress Test.
 - **Desempenho:** preparar o caso, rodar a suíte manualmente e tocar em
   *Concluir e gerar relatório*.
-- **Abortar** encerra, gera relatório parcial e zera os offsets.
+- **Abortar** encerra, gera relatório parcial e volta ao default do módulo.
 
 O mesmo pode ser feito por linha de comando:
 
@@ -225,6 +225,37 @@ nos três clusters e `1%` na GPU já vinham se mostrando estáveis. O default do
 kernel foi fixado em `3 3 3 1` (o caso 3 deste protocolo), o `.ko` foi
 recompilado e o boot revalidado. A escolha abre mão da comparação de consumo
 entre 2 e 3 em troca de não atrasar o restante do projeto.
+
+### Prova física do default
+
+A comparação de consumo acima tem resolução de poucos mAh e não mostra se a
+margem chega ao silício. Isso foi verificado à parte, lendo a tensão programada
+nos módulos reguladores dos PMICs:
+
+| Domínio | Rail | 0% | default | Queda |
+|---|---|---|---|---|
+| cpucl0 | s2mps24 BUCK2S, 2.210 MHz | 987,50 mV | 968,75 mV | 18,75 mV (3 passos) |
+| cpucl1 | s2mps24 BUCK3S, 1.768 MHz | 737,50 mV | 718,75 mV | 18,75 mV (3 passos) |
+| cpucl2 | s2mps24 BUCK4S, 2.496 MHz | 925,00 mV | 900,00 mV | 25,00 mV (4 passos) |
+| gpu | s2mps23 BUCK1, 858 MHz | 762,50 mV | 756,25 mV | 6,25 mV (1 passo) |
+
+Quatro pares `0%`/default por domínio, todos iguais, com o passo de 6,25 mV do
+PMIC. A queda é aplicada na hora, sem precisar de transição de DVFS.
+
+O controle positivo mostra o outro lado: `10%` em `cpucl1` a 1,768 GHz reiniciou
+o aparelho por watchdog em menos de 1 s, com `/proc/reset_reason` = `DPON`. Ou
+seja, a margem chega ao hardware de fato. Detalhes no
+[documento 22](alteracoes/22-undervolt-modulo-kernel.md).
+
+O harness faz essa leitura com `powervalidate.sh`:
+
+```sh
+su -c 'sh /data/adb/modules/o1s-lab/bin/powervalidate.sh probe'
+su -c 'sh /data/adb/modules/o1s-lab/bin/powervalidate.sh run'
+```
+
+`run` prende um cluster por vez, alterna `0` e o default quatro vezes e grava em
+`/data/local/tmp/uv-power.log`.
 
 ## Critério de escolha final
 

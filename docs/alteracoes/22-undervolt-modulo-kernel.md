@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | validado (build, runtime e boot); default `3 3 3 1` definido |
+| Status | validado (build, runtime, boot e prova física nos PMICs); default `3 3 3 1` |
 | Commit(s) | `0f9e42a50`, `5bcdcd913`, `dae25faee`, `f519b1140`, `25699e292` (branch `undervolt-module`) |
 | Arquivos | `drivers/soc/samsung/undervolt/`, `drivers/soc/samsung/{Kconfig,Makefile}`, `arch/arm64/configs/samsung/o1s.config`, `ksu-modules/undervolt-o1s/` |
 | Origem | autoral, sobre os símbolos exportados por `cmupmucal.ko`; abordagem inspirada no Floppy `27200b8ad` |
@@ -163,6 +163,62 @@ Recompilado apenas o `.ko` (`make modules`, sem `Image` novo):
 - abrir a WebUI no gerenciador e conferir leitura/escrita pela interface;
 - se for preciso separar diferenças de consumo menores que a resolução do
   medidor, fazer uma rodada noturna longa (8 h ou mais).
+
+### Prova física
+
+O sysfs só mostra o que o módulo pediu. Para provar que a margem chega ao
+hardware, foi lida a tensão que o ACPM **programou** nos reguladores, direto dos
+registradores dos PMICs (`s2mps23_read` e `s2mps24_read`, via proxy do ACPM).
+
+Os rails foram identificados no aparelho alternando um domínio por vez:
+
+| Domínio | Rail | Registrador | Mínimo | Passo |
+|---|---|---|---|---|
+| CPUCL0 (LITTLE) | s2mps24 BUCK2S OUT2 | `0x011f` | 300 mV | 6,25 mV |
+| CPUCL1 (A76) | s2mps24 BUCK3S OUT2 | `0x0123` | 300 mV | 6,25 mV |
+| CPUCL2 (X1) | s2mps24 BUCK4S OUT2 | `0x0127` | 300 mV | 6,25 mV |
+| G3D (GPU) | s2mps23 BUCK1 | `0x011e` | 300 mV | 6,25 mV |
+
+Os três clusters de CPU ficam no **sub-PMIC s2mps24**; a GPU, no s2mps23.
+`mV = 300 + 0,00625 × valor`.
+
+Cada cluster foi preso na frequência mais alta com carga, e a margem do domínio
+alternada entre `0` e o default, quatro vezes. Resultado (4/4 pares iguais em
+cada linha):
+
+| Domínio | Frequência | 0% | default | Queda |
+|---|---|---|---|---|
+| cpucl0 | 2.210 MHz | 987,50 mV (`0x6e`) | 968,75 mV (`0x6b`) | 18,75 mV (3 passos) |
+| cpucl1 | 1.768 MHz | 737,50 mV (`0x46`) | 718,75 mV (`0x43`) | 18,75 mV (3 passos) |
+| cpucl2 | 2.496 MHz | 925,00 mV (`0x64`) | 900,00 mV (`0x60`) | 25,00 mV (4 passos) |
+| gpu | 858 MHz travado | 762,50 mV (`0x4a`) | 756,25 mV (`0x49`) | 6,25 mV (1 passo) |
+
+A queda é imediata: não é preciso transição de DVFS depois de escrever a margem,
+o ACPM reprograma o rail na hora. O número de passos é o truncamento de 3% (ou
+1% na GPU) sobre a tensão do OPP, arredondado para baixo no passo de 6,25 mV —
+por isso 3 passos em CL0/CL1 e 4 em CL2, cujo OPP é mais alto.
+
+### Controle positivo: o que acontece se exagerar
+
+O mesmo teste com `10%` em `cpucl1` a 1,768 GHz **reiniciou o aparelho** cerca de
+0,7 s depois da escrita, sem panic no `pstore`:
+
+- `/proc/reset_reason` = `DPON` (`RR_D` = 3, watchdog);
+- `reset_summary`: `WATCHDOG RESET`, `WDGC` desconhecido;
+- `pstore` termina logo depois de
+  `[CPUCL1] +margin -10 uV` e de uma leitura `s2mps23_read_store: reg(0x0129)`;
+- `persist.sys.boot.reason.history` registra `reboot` (sem `,shell`), ou seja,
+  não foi reboot por comando.
+
+É a demonstração inversa: um valor que só existisse em arquivo não derrubaria o
+aparelho. Por isso a margem de teste fica limitada ao default, e o harness não
+sobe acima dele.
+
+### Suspend com o default
+
+Com `3 3 3 1`, o aparelho ficou ~15 min em suspend profundo (buraco de 847 s no
+coletor, `btime` inalterado), sem reboot, panic ou incidente, e os offsets
+continuaram `3 3 3 1` ao acordar.
 
 O harness que aplica os casos e coleta as métricas é local, não versionado, e
 não é exigido pelo kernel. O fluxo e os critérios estão no protocolo.
