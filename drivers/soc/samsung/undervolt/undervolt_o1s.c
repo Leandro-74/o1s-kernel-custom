@@ -23,7 +23,12 @@
 #include "../cal-if/cmucal.h"
 #include <soc/samsung/cal-if.h>
 
-#define UV_MAX_PERCENT	100
+/*
+ * Teto de seguranca. Os valores validados em uso real ficam bem abaixo disto;
+ * acima daqui o aparelho pode reiniciar por watchdog. A escrita e recusada
+ * antes de chegar ao ACPM.
+ */
+#define UV_MAX_PERCENT	10
 
 struct uv_domain {
 	const char	*name;
