@@ -208,7 +208,8 @@ O mesmo teste com `10%` em `cpucl1` a 1,768 GHz **reiniciou o aparelho** cerca d
 - `pstore` termina logo depois de
   `[CPUCL1] +margin -10 uV` e de uma leitura `s2mps23_read_store: reg(0x0129)`;
 - `persist.sys.boot.reason.history` registra `reboot` (sem `,shell`), ou seja,
-  não foi reboot por comando.
+  não foi reboot por comando, e o usuário confirmou que não reiniciou o aparelho
+  manualmente.
 
 É a demonstração inversa: um valor que só existisse em arquivo não derrubaria o
 aparelho. Por isso a margem de teste fica limitada ao default, e o harness não
